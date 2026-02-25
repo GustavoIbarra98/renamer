@@ -10,13 +10,17 @@ let print_help () =
   print_endline "  --dry-run          Preview renames without applying them";
   print_endline "  --lowercase        Convert filenames to lowercase";
   print_endline "  --prefix <text>    Add a prefix to filenames";
+  print_endline "  --remove-spaces    Delete all spaces from filenames";
+  print_endline "  --replace-plus     Replace + signs with underscores";
   print_endline "  --help             Show this help message";
   print_endline "";
   print_endline "Examples:";
   print_endline "  renamer .";
   print_endline "  renamer --dry-run .";
   print_endline "  renamer --lowercase .";
-  print_endline "  renamer --prefix draft_ ."
+  print_endline "  renamer --prefix draft_ .";
+  print_endline "  renamer --remove-spaces .";
+  print_endline "  renamer --replace-plus ."
 
 let find_prefix args =
   let rec aux = function
@@ -29,6 +33,10 @@ let find_prefix args =
 let get_transform args =
   if List.mem "--lowercase" args then
     Renamer.lowercase_transform
+  else if List.mem "--remove-spaces" args then
+    Renamer.remove_spaces
+  else if List.mem "--replace-plus" args then
+    Renamer.replace_plus
   else
     match find_prefix args with
     | Some prefix -> Renamer.prefix_transform prefix
@@ -40,6 +48,8 @@ let clean_args args =
     a <> "--dry-run" &&
     a <> "--lowercase" &&
     a <> "--prefix" &&
+    a <> "--remove-spaces" &&
+    a <> "--replace-plus" &&
     (match prefix with Some p -> a <> p | None -> true)
   ) args
 

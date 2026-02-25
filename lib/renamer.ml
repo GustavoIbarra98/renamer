@@ -5,6 +5,18 @@ let prefix_transform prefix f =
   prefix ^ f
 
 
+
+let remove_spaces f =
+    String.trim f
+    |> String.to_seq
+    |> Seq.filter (fun c -> c <> ' ')
+    |> String.of_seq
+  
+let replace_plus f =
+    String.to_seq f
+    |> Seq.map (fun c -> if c = '+' then '_' else c)
+    |> String.of_seq
+    
 let list_files dir =
   Sys.readdir dir
   |> Array.to_list
